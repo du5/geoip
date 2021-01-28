@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: 0 0 * * * 
+    - cron: 0 */6 * * * 
   workflow_dispatch:
 
 jobs:
@@ -15,23 +15,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Install Wget
+        with:
+          ref: v0.0.1
+      - name: Install && Configuration
         run: |
           sudo apt-get -qq update
-          sudo apt-get -y -qq install wget 
+          sudo apt-get -y -qq install wget
       - name: Get GeoIP2 DBs
         run: |
           bash download.bash ASN ${{ secrets.APP_KEY }}
           bash download.bash City ${{ secrets.APP_KEY }}
           bash download.bash Country ${{ secrets.APP_KEY }}
       - name: Commit files
+        env:
+          TZ: Asia/Shanghai
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add -A
-          git commit -m "Auto Sync `date -R` - [Skip GitHub Action]" -a
+          git commit -m "Auto Sync `date -R` - [Skip GitHub Action]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+          force: true
