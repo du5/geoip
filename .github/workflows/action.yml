@@ -2,11 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   schedule:
-    - cron: 0 */6 * * * 
+    - cron: 0 */6 * * *
   workflow_dispatch:
 
 jobs:
@@ -14,18 +14,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
         with:
-          ref: v0.0.1
+          ref: v0.0.2
       - name: Install && Configuration
         run: |
           sudo apt-get -qq update
           sudo apt-get -y -qq install wget
-      - name: Get GeoIP2 DBs
+      - name: Get GeoLite2 DBs
         run: |
-          bash download.bash ASN ${{ secrets.APP_KEY }}
-          bash download.bash City ${{ secrets.APP_KEY }}
-          bash download.bash Country ${{ secrets.APP_KEY }}
+          bash download.bash ASN ${{ secrets.AccountID }} ${{ secrets.LicenseKey }}
+          bash download.bash City ${{ secrets.AccountID }} ${{ secrets.LicenseKey }}
+          bash download.bash Country ${{ secrets.AccountID }} ${{ secrets.LicenseKey }}
       - name: Commit files
         env:
           TZ: Asia/Shanghai
