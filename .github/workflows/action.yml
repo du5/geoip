@@ -20,7 +20,7 @@ jobs:
       - name: Install && Configuration
         run: |
           sudo apt-get -qq update
-          sudo apt-get -y -qq install wget
+          sudo apt-get -y -qq install wget git git-lfs
       - name: Get GeoLite2 DBs
         run: |
           bash download.bash ASN ${{ secrets.AccountID }} ${{ secrets.LicenseKey }}
